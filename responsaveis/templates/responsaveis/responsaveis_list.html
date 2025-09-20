@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Responsáveis{% endblock %}
+{% block content %}
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold">Responsáveis</h1>
+    <a href="{% url 'responsaveis:create' %}" class="px-4 py-2 rounded-xl bg-gray-900 text-white">Novo responsável</a>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200 text-sm">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">CPF</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Telefone</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cidade</th>
+          <th class="px-6 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {% for r in responsaveis %}
+        <tr>
+          <td class="px-6 py-3">{{ r.nome }}</td>
+          <td class="px-6 py-3">{{ r.cpf|default:"—" }}</td>
+          <td class="px-6 py-3">{{ r.telefone|default:"—" }}</td>
+          <td class="px-6 py-3">{{ r.cidade|default:"—" }}</td>
+          <td class="px-6 py-3 text-right space-x-2">
+            <a href="{% url 'responsaveis:update' r.pk %}" class="px-3 py-1 rounded-lg border">Editar</a>
+            <a href="{% url 'responsaveis:delete' r.pk %}" class="px-3 py-1 rounded-lg border text-red-600">Excluir</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td class="px-6 py-6 text-gray-500" colspan="5">Nenhum responsável cadastrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

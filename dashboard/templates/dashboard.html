@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+  <h1 class="text-2xl md:text-3xl font-bold mb-6">Dashboard</h1>
+
+  <!-- KPIs -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    {% for c in cards %}
+      <div class="bg-white rounded-2xl shadow p-6">
+        <div class="text-sm text-gray-500">{{ c.title }}</div>
+        <div class="text-3xl font-semibold mt-1">{{ c.value }}</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Gráficos -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white rounded-2xl shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">Cadastros por mês (linha)</h2>
+      <canvas id="lineChart" height="120"></canvas>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">Cadastros por mês (barra)</h2>
+      <canvas id="barChart" height="120"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // dados vindos da view
+    const labels = {{ meses_labels|safe }};
+    const dataCounts = {{ meses_counts|safe }};
+
+    // Linha
+    new Chart(document.getElementById('lineChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Alunos/mês',
+          data: dataCounts,
+          tension: 0.3,
+          fill: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: true } },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+
+    // Barras
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Alunos/mês',
+          data: dataCounts,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: true } },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+  </script>
+{% endblock %}
